@@ -335,7 +335,8 @@
     "recommend": "Recommend For You",
     "viewProfile": "View Profile",
     "topWeek": "Top of the Week",
-    "techsb": "All Technicians Books"
+    "techsb": "All Technicians Books",
+    "resRev" : "Restaurants Reversations"
   },
   "doctor": {
     "ViewCV": "View CV",
@@ -857,7 +858,7 @@
     "panel": "Restaurant Panel",
     "dashboard": "Dashboard",
     "menu": "Menu",
-    "orders": "Orders",
+    "orders": "Table Orders",
     "reviews": "Reviews",
     "profile": "Profile",
     "loading": "loading restaurants...",
@@ -875,6 +876,22 @@
     "required": "This field is required",
     "maxTables": "Max 4 tables allowed",
     "maxPersons": "Max 20 persons allowed",
-    "futureDate": "Date must be in the future"
+    "futureDate": "Date must be in the future",
+    "noBookings": "No reservations found",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "cancel": "Cancel",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "edit": "Edit",
+    "editProfile": "Edit Profile",
+    "email": "Email",
+    "saving" : "Saving...",
+    "accept": "Accept",
+    "reservationsDashboard" : "Reversation Tables List",
+    "manageBookings" : "manage your bookings and keep your eyes on it."
   }
 }

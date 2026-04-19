@@ -5,12 +5,11 @@ import { fetchAllRestaurant } from "../../api/restaurant/restaurant-api";
 export default function useFetchAllRestaurants(
   pageNumber: number = 1,
   pageSize: number = 10,
-  id:number,
-  filterId: number
+  id:number
 ) {
   return useQuery({
-    queryKey: ["allRestaurants", pageNumber, pageSize , i18next.language , filterId],
-    queryFn: () => fetchAllRestaurant(pageNumber, pageSize , id , filterId),
+    queryKey: ["allRestaurants", pageNumber, pageSize , i18next.language , id],
+    queryFn: () => fetchAllRestaurant(pageNumber, pageSize , id),
     staleTime: 1000 * 60,
     placeholderData: (previousData) => previousData,
   });

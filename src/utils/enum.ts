@@ -32,3 +32,9 @@ export const TechBookStatus = {
    Cancelled : 4,
    Done: 5
 }
+export const RestaurantBookStatus = {
+   Pending : 0,
+   Accepted: 1,
+   Cancelled : 2,
+   Completed: 3
+}

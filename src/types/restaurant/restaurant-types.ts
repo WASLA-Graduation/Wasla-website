@@ -27,3 +27,25 @@ export interface addTableData {
     reservationDate: string,
     reservationTime: string
 }
+
+export interface reversationData{
+    id: number,
+    restaurantId: string,
+    numberOfPersons: number,
+    restaurantName: string,
+    restaurantProfile: string,
+    restaurantPhone: string,
+    reservationDate: string,
+    reservationTime: string,
+    status: number
+}
+export interface reversationDashboardData{
+    id: number,
+    userId: string,
+    profile: string,
+    phone: string, //photo
+    numberOfPersons: number,
+    reservationDate: string,
+    reservationTime: string,
+    status: number
+}

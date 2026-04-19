@@ -19,7 +19,7 @@ export default function RestaurantsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(2);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(0);
   const [page, setPage] = useState(1);
 
   const userId = sessionStorage.getItem("user_id")!;
@@ -32,7 +32,6 @@ export default function RestaurantsPage() {
   const { data, isLoading } = useFetchAllRestaurants(
     page,
     6,
-    Number(userId),
     selectedCategory ?? 0
   );
 
@@ -51,16 +50,15 @@ export default function RestaurantsPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
 
-      {/* 🔥 Categories Slider */}
       <Swiper spaceBetween={10} slidesPerView="auto" className="mb-6">
         <SwiperSlide style={{ width: "auto" }}>
           <button
             onClick={() => {
-              setSelectedCategory(null);
+              setSelectedCategory(0);
               setPage(1);
             }}
             className={`px-5 py-2 rounded-2xl transition ${
-              selectedCategory === null
+              selectedCategory === 0
                 ? "bg-primary text-white shadow"
                 : "bg-dried text-white"
             }`}

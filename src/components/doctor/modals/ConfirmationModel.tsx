@@ -7,7 +7,7 @@ interface ConfirmationModalProps {
   onConfirm: () => void;
   title?: string;
   message?: string;
-  type?: "accept" | "reject" | "cancel";
+  type?: "accept" | "reject" | "cancel" | null;
 }
 
 export default function ConfirmationModal({

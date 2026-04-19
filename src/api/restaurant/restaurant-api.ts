@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { addTableData, restaurantDetailsData, showAllRestaurants } from "../../types/restaurant/restaurant-types";
+import { addTableData, restaurantDetailsData, reversationDashboardData, reversationData, showAllRestaurants } from "../../types/restaurant/restaurant-types";
 
 interface SpicialzedcatData {
   id:number,
@@ -28,6 +28,21 @@ export async function setRestaurantProfile(formData: FormData) {
   }
 }
 
+export async function EditRestaurnatProfile(formData: FormData) {
+   try {
+    const response = await axiosInstance.put(`Restaurant/UpdateRestaurant`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    toast.success(response.data.message || "profile Updated successfully!");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "Updated failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
 interface PaginatedResponse<T> {
   data: T[];
   totalCount: number;
@@ -39,11 +54,10 @@ export async function fetchAllRestaurant(
   pageNumber: number = 1,
   pageSize: number = 6,
   id:number,
-  filterId : number
 ): Promise<PaginatedResponse<showAllRestaurants>> {
   try {
     const response = await axiosInstance.get(
-      `Restaurant/Restaurants?id=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}&filterId=${filterId}`,
+      `Restaurant/Restaurants?id=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
     );
     const result = response.data;
     return {
@@ -85,6 +99,69 @@ export async function bookARestaurantTable(formData: addTableData) {
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function getReverstaionForResident(
+  pageNumber: number = 1,
+  pageSize: number = 6,
+  id: string,
+): Promise<PaginatedResponse<reversationData>> {
+  try {
+    const response = await axiosInstance.get(
+      `Reservation/ResidentReservations?id=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    );
+    const result = response.data;
+    return {
+      data: result.data?.data || [],
+      totalCount: result.data?.totalCount || 0,
+      currentPage: result.data?.pageNumber || pageNumber,
+      pageSize: result.data?.pageSize || pageSize,
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "Failed to fetch Reversation Books";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function changeStatusReversation(reversationId: number , status:number) {
+   try {
+    const response = await axiosInstance.put(`Reservation/ChangeStatus?reservationId=${reversationId}&status=${status}`);
+    toast.success(response.data.message || "Book Changed successfully");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "changed failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function getReversationsForDashboard(
+  pageNumber: number = 1,
+  pageSize: number = 6,
+  id: string,
+): Promise<PaginatedResponse<reversationDashboardData>> {
+  try {
+    const response = await axiosInstance.get(
+      `Reservation/RestaurantReservations?id=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    );
+    const result = response.data;
+    return {
+      data: result.data?.data || [],
+      totalCount: result.data?.totalCount || 0,
+      currentPage: result.data?.pageNumber || pageNumber,
+      pageSize: result.data?.pageSize || pageSize,
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "Failed to fetch Reversation Books";
     toast.error(errorMessage);
     throw error;
   }
