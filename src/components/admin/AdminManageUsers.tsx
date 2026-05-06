@@ -14,8 +14,8 @@ import i18next from "i18next";
 
 enum UserStatus {
   Active = 0,
-  Suspended = 1,
-  NotApproved = 2,
+  Pending = 1,
+  Suspended = 2,
   Deleted = 3,
 }
 
@@ -29,7 +29,7 @@ const statusColor = (status: number) => {
         border: "border-green-500/20",
         dot: "bg-green-500"
       };
-    case UserStatus.NotApproved:
+    case UserStatus.Pending:
       return {
         bg: "bg-yellow-500/10",
         text: "text-yellow-600",
@@ -78,7 +78,7 @@ export default function AdminManageUsers() {
         return t("admin.Active");
       case UserStatus.Suspended:
         return t("admin.Suspended");
-      case UserStatus.NotApproved:
+      case UserStatus.Pending:
         return t("admin.Pending");
       case UserStatus.Deleted:
         return t("admin.Deleted");
@@ -104,7 +104,7 @@ export default function AdminManageUsers() {
   const stats = {
     total: users.length,
     active: users.filter(u => u.status === UserStatus.Active).length,
-    pending: users.filter(u => u.status === UserStatus.NotApproved).length,
+    pending: users.filter(u => u.status === UserStatus.Pending).length,
     suspended: users.filter(u => u.status === UserStatus.Suspended).length,
   };
 
@@ -191,7 +191,7 @@ export default function AdminManageUsers() {
                 const active = role?.roleName === r.roleName;
                 
                 return (
-                  r.roleName === "admin" || r.roleName === "مشرف" ? 
+                  (r.roleName === "admin" || r.roleName === "مشرف") || (r.roleName === "superadmin" || r.roleName === "الأدمن المتحكم")? 
                   <></>
                   :    
                   <button
@@ -390,7 +390,7 @@ export default function AdminManageUsers() {
                         </td>
                         <td className="p-3 md:p-4">
                           <div className="flex justify-end gap-1.5 md:gap-2">
-                            {user.status === UserStatus.NotApproved && (
+                            {user.status === UserStatus.Pending && (
                               <button
                                 disabled={isChanging}
                                 onClick={() => handleStatusChange(user.id, UserStatus.Active)}

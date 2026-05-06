@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FaFlag, FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
+import { FaFlag, FaEye, FaEyeSlash, FaSpinner, FaTrash } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import useGetReportsByHidden from "../../hooks/admin/useGetReportsByHidden";
 import useToggleReport from "../../hooks/admin/useToggleReport";
+import useDeleteReport from "../../hooks/admin/useDeleteReport";
 import ReasonModal from "./Modal/ReasonModal";
 
 const PAGE_SIZE = 10;
@@ -16,6 +17,7 @@ export default function AdminSocialReports() {
   const [page, setPage] = useState(1);
   const adminId = sessionStorage.getItem("user_id")!;
   const [preview, setPreview] = useState<string | null>(null);
+  const { mutate: deleteReportFn, isPending: isDeleting } = useDeleteReport();
 
   const { data, isLoading, isError } = useGetReportsByHidden(
     page,
@@ -231,25 +233,48 @@ export default function AdminSocialReports() {
                 </div>
 
                 {/*  Action */}
-                <div className="mt-4 flex justify-end">
+                <div className="mt-5 flex justify-end items-center gap-2">
+                  {/* Hide / Restore */}
                   <button
                     disabled={isPending}
                     onClick={() => {
                       if (flag) {
-                        toggle({ id: item.targetId , adminId });
+                        toggle({ id: item.targetId, adminId });
                       } else {
                         setSelectedId(item.targetId);
                         setOpenReasonModal(true);
                       }
                     }}
-                    className={`px-5 py-2 rounded-xl text-white flex items-center gap-2
-                      ${
-                        flag
-                          ? "bg-green-600 hover:bg-green-700"
-                          : "bg-red-500 hover:bg-red-600"
-                      }`}>
-                    {isPending && <FaSpinner className="animate-spin" />}
+                    className={`h-10 px-4 rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition
+      ${
+        flag
+          ? "bg-green-600/90 hover:bg-green-700 text-white"
+          : "bg-red-500/90 hover:bg-red-600 text-white"
+      }`}>
+                    {isPending ? (
+                      <FaSpinner className="animate-spin" />
+                    ) : flag ? (
+                      <FaEye />
+                    ) : (
+                      <FaEyeSlash />
+                    )}
                     {flag ? t("admin.restore") : t("admin.hide")}
+                  </button>
+
+                  {/* Delete All Reports */}
+                  <button
+                    disabled={isDeleting}
+                    onClick={() => {
+                        deleteReportFn(item.targetId);
+                    }}
+                    className="h-10 w-10 flex items-center justify-center rounded-lg 
+               bg-red-100 text-red-600 hover:bg-red-600 hover:text-white
+               transition group">
+                    {isDeleting ? (
+                      <FaSpinner className="animate-spin" />
+                    ) : (
+                      <FaTrash className="group-hover:scale-110 transition" />
+                    )}
                   </button>
                 </div>
               </div>

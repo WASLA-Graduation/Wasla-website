@@ -657,6 +657,7 @@
     "Price": "Price",
     "month": "Duration (months)",
     "Package": "Package",
+    "addPh" : "add New Phone",
     "Offer": "Offer",
     "disc": "Discount %",
     "Cancel": "Cancel",

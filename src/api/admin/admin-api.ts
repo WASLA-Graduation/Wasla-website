@@ -153,3 +153,16 @@ export async function getReportsByHidden(
     throw error;
   }
 }
+
+export async function deleteReport(id:number) {
+  try {
+    const response = await axiosInstance.delete(`Social/Report?id=${id}`);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}

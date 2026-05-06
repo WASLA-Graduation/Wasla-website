@@ -42,9 +42,7 @@ export default function ResidentActivitySection({ userId }: Props) {
               {/* Image */}
               <div className="h-40 overflow-hidden">
                 <img
-                  src={
-                    import.meta.env.VITE_USER_IMAGE + item.image
-                  }
+                  src={ item.image }
                   alt={item.name}
                   loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-300"

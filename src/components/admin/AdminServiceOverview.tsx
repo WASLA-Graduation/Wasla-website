@@ -40,9 +40,7 @@ export default function AdminServiceDashboard() {
 
   const getImage = (item: userActivityData) => {
     if (!item?.image) return "/images/default-user.png";
-    return item.roleName === "gym"
-      ? import.meta.env.VITE_GYM_IMAGE + item.image
-      : import.meta.env.VITE_USER_IMAGE + item.image;
+    return item.image;
   };
 
   const totalViews = data.conversion.reduce(

@@ -177,7 +177,7 @@ export default function EditGymProfileModal({
                           className="flex items-center gap-1 text-primary text-sm mt-2"
                         >
                           <FaPlus />
-                          {t("gym.add")}
+                          {t("gym.addPh")}
                         </button>
                       </>
                     )}

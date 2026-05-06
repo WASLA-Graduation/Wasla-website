@@ -38,9 +38,7 @@ export default function ResidentTopWeek() {
               {/* Image */}
               <div className="h-40 overflow-hidden">
                 <img
-                  src={
-                  import.meta.env.VITE_USER_IMAGE + item.image
-                  }
+                  src={item.image}
                   loading="lazy"
                   alt={item.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
