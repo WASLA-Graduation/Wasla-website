@@ -57,7 +57,7 @@ export default function TechnicianJobs() {
 
     if (actionType === "accept") acceptBook(selectedId);
     if (actionType === "reject") rejectBook(selectedId);
-    if (actionType === "cancel") cancelBook(selectedId);
+    if (actionType === "cancel") cancelBook({ bookingId: selectedId, isResident: false });
 
     setShowConfirm(false);
     setSelectedId(null);

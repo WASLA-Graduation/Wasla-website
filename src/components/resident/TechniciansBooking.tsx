@@ -45,7 +45,7 @@ export default function TechBookings() {
   const confirmAction = () => {
     if (!selectedId || !actionType) return;
 
-    if (actionType === "cancel") cancelBook(selectedId);
+    if (actionType === "cancel") cancelBook({ bookingId: selectedId, isResident: true });
 
     setShowConfirm(false);
     setSelectedId(null);

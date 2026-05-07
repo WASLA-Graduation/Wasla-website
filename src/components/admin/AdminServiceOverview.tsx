@@ -23,6 +23,7 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import RestaurantCategoryManager from "./RestaurantCategoryManager";
 
 export default function AdminServiceDashboard() {
   const { t } = useTranslation();
@@ -161,7 +162,9 @@ export default function AdminServiceDashboard() {
           </motion.div>
         ))}
       </div>
-
+      
+      {/* Restaurant Categories */}
+      <RestaurantCategoryManager />
       {/* Conversion Table */}
       <div
         className="bg-card border border-border rounded-xl overflow-x-auto shadow-lg"

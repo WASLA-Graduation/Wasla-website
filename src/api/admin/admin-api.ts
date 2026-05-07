@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { AdminOverviewData, AdminUsersResponse, GetUserDetailsResponse, ReportsData, ReportsTargetData } from "../../types/admin/adminTypes";
+import { AdminOverviewData, AdminUsersResponse, editrestaurantCategoryData, GetUserDetailsResponse, ReportsData, ReportsTargetData, restaurantCategoryData } from "../../types/admin/adminTypes";
 import { PaginatedResponse } from "../restaurant/restaurant-api";
 
 // reports
@@ -157,6 +157,61 @@ export async function getReportsByHidden(
 export async function deleteReport(id:number) {
   try {
     const response = await axiosInstance.delete(`Social/Report?id=${id}`);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// restaurant gategory
+export async function addRestaurantCategory(formData: restaurantCategoryData) {
+  try {
+    const response = await axiosInstance.post("RestaurantCategory/Category", formData);
+
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+export async function editRestaurantCategory(formData: editrestaurantCategoryData) {
+  try {
+    const response = await axiosInstance.put("RestaurantCategory/Category", formData);
+
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+export async function deleteRestaurantCategory(id:number) {
+  try {
+    const response = await axiosInstance.delete(`RestaurantCategory/Category?id=${id}`);
+
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+// upload identity
+export async function uploadIdentity(NationalI: string , gmail: string) {
+  try {
+    const response = await axiosInstance.post(`Resident/UploadIdentity?NationalI=${NationalI}&gmail=${gmail}`);
+
     toast.success(response.data.message);
     return response.data;
   } catch (error) {

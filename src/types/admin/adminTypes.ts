@@ -156,3 +156,16 @@ export interface allAdminsData{
     phone: string,
     status: number // o -> active , 2-> suspend
 }
+export interface restaurantCategoryData{
+    name: {
+    english: string,
+    arabic: string
+  }
+}
+export interface editrestaurantCategoryData{
+  id:number,  
+  name: {
+    english: string,
+    arabic: string
+  }
+}

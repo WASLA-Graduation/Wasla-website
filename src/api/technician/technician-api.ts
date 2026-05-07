@@ -99,9 +99,9 @@ export async function getTechResidnetBooking(residentId: string): Promise<Techni
   }
 }
 
-export async function cancelTechBook(bookingId: number) {
+export async function cancelTechBook(bookingId: number, isResident: boolean) {
    try {
-    const response = await axiosInstance.put(`TechnicianBooking/cancel/${bookingId}`);
+    const response = await axiosInstance.put(`TechnicianBooking/cancel/${bookingId}isResident=${isResident}`);
     toast.success(response.data.message || "Book Canceled successfully");
     return response.data;
   } catch (error) {
