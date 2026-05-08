@@ -54,6 +54,18 @@ export default function EditBookingModal({
   const { t } = useTranslation();
   const { mutate: updateBook, isPending } = useUpdateDoctorBook();
 
+  const formatTime = (time: string) => {
+    return `${time}:00`;
+  };
+
+  const formatBookingDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T00:00:00`;
+};
+
   const handleConfirm = () => {
     if (!selectedDate) {
       toast.error(t("doctor.selectDate"));
@@ -75,9 +87,9 @@ export default function EditBookingModal({
     const payload: doctorUpdateBookData = {
       bookingId,
       newDayOfWeek: dayOfWeek,
-      bookingDate: selectedDate.toISOString().split("T")[0],
-      newStart: startTime,
-      newEnd: endTime,
+      bookingDate: formatBookingDate(selectedDate),
+      newStart: formatTime(startTime),
+      newEnd: formatTime(endTime),
     };
 
     updateBook(payload, {

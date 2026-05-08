@@ -19,7 +19,7 @@ export default function ChatLayout() {
         className={`
           flex flex-col
           w-full lg:max-w-[350px]
-          md:max-w-[150px]
+          md:max-w-[250px]
           shrink-0
           border-r border-border
           bg-background

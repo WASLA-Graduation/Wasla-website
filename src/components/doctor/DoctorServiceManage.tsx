@@ -156,8 +156,8 @@ export default function DoctorServiceManage() {
                               <span
                                 key={ti.id}
                                 className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
-                                {ti.start.slice(0, 5)} {t("doctor.to")} 
-                                {ti.end.slice(0, 5)}
+                                {ti.start.slice(0, 5)} {t("doctor.to") + " "}  
+                                { ti.end.slice(0, 5)}
                               </span>
                             ))}
                           </div>

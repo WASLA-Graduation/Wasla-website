@@ -58,7 +58,7 @@ export default function RestaurantProfile() {
                 <FaUtensils /> {categoryName}
               </p>
 
-              <div className="flex gap-3 mt-4 justify-center md:justify-start">
+              <div className="flex gap-3 mt-4 justify-center flex-col md:justify-start md:flex-row">
                 <button
                   onClick={() => setOpenEdit(true)}
                   className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg">

@@ -88,17 +88,12 @@ export default function UserProfileChatPage() {
           ) : null}
 
           {profile?.phone && (
-            <p className="flex items-center gap-1 text-sm text-dried mt-1 justify-center">
+            <a
+              href={`tel:${profile.phone}`}
+              className="flex items-center gap-1 text-sm text-dried mt-1 justify-center hover:text-primary transition">
               <FiPhone size={13} />
               {profile.phone}
-            </p>
-          )}
-
-          {profile?.phone && (
-            <p className="flex items-center gap-1 text-sm text-dried mt-1 justify-center">
-              <FiPhone size={13} />
-              {profile.phone}
-            </p>
+            </a>
           )}
         </div>
       </div>
@@ -172,13 +167,13 @@ export default function UserProfileChatPage() {
       {isMe && <ChatProfileSettings />}
       {isMe && (
         <div className="mb-4 mt-4">
-        <motion.button
-          onClick={() => navigate("/dashboard")}
-          className="w-[80%] m-auto mb-2 px-6 py-3 rounded-full border border-[#2f3336] text-sky-500 hover:bg-white/10 transition font-bold flex justify-center items-center gap-2"
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}>
-          <FaArrowRight /> {t("common.back")}
-        </motion.button>
+          <motion.button
+            onClick={() => navigate("/dashboard")}
+            className="w-[80%] m-auto mb-2 px-6 py-3 rounded-full border border-[#2f3336] text-sky-500 hover:bg-white/10 transition font-bold flex justify-center items-center gap-2"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}>
+            <FaArrowRight /> {t("common.back")}
+          </motion.button>
         </div>
       )}
     </div>

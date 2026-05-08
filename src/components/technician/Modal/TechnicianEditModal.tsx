@@ -59,18 +59,16 @@ export default function EditTechnicianProfileModal({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-2 sm:p-4 overflow-y-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
+          exit={{ opacity: 0 }}>
           <motion.div
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.95 }}
-            className="bg-background w-full max-w-2xl rounded-xl p-6 shadow-xl border border-border overflow-y-auto max-h-[90vh]"
-          >
-            <h2 className="text-2xl font-bold mb-6 text-foreground text-center">
+            className="bg-background w-full max-w-2xl rounded-xl p-4 sm:p-6 shadow-xl border border-border overflow-y-auto max-h-[95vh] my-4">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-foreground text-center">
               {t("tech.editProfile")}
             </h2>
 
@@ -86,18 +84,16 @@ export default function EditTechnicianProfileModal({
                 Documents: [],
               }}
               validationSchema={validationSchema}
-              onSubmit={handleSubmit}
-            >
+              onSubmit={handleSubmit}>
               {({ setFieldValue }) => (
-                <Form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+                <Form className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   {/* IMAGE */}
                   <div className="col-span-2 flex justify-center mb-4">
                     <label className="cursor-pointer relative">
                       <img
                         src={preview || ""}
                         loading="lazy"
-                        className="w-28 h-28 rounded-full object-cover border-2 border-primary shadow-md"
+                        className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-primary shadow-md"
                       />
                       <input
                         type="file"
@@ -114,39 +110,48 @@ export default function EditTechnicianProfileModal({
                     </label>
                   </div>
 
-                  {/* FullName */}
-                  <Input name="FullName" label={t("tech.name")} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 col-span-2">
+                    {/* FullName */}
+                    <Input name="FullName" label={t("tech.name")} />
 
-                  {/* Phone */}
-                  <Input name="Phone" label={t("tech.phone")} />
+                    {/* Phone */}
+                    <Input name="Phone" label={t("tech.phone")} />
 
-                  {/* BirthDay */}
-                  <Input name="BirthDay" type="date" label={t("tech.birthday")} />
+                    {/* BirthDay */}
+                    <Input
+                      name="BirthDay"
+                      type="date"
+                      label={t("tech.birthday")}
+                    />
 
-                  {/* Experience */}
-                  <Input
-                    name="ExperienceYears"
-                    type="number"
-                    label={t("tech.experience")}
-                  />
+                    {/* Experience */}
+                    <Input
+                      name="ExperienceYears"
+                      type="number"
+                      label={t("tech.experience")}
+                    />
+                  </div>
 
                   {/* Specialty */}
-                  <div className="flex flex-col">
+                  <div className="flex flex-col min-w-[200px]">
                     <label className="mb-1 text-sm font-medium text-foreground">
                       {t("tech.specialization")}
                     </label>
                     <Field
                       as="select"
                       name="Specialty"
-                      className="p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition"
-                    >
+                      className="w-full p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition">
                       {specs?.map((s) => (
                         <option key={s.id} value={s.id}>
                           {s.name}
                         </option>
                       ))}
                     </Field>
-                    <ErrorMessage name="Specialty" component="div" className="text-red-500 text-xs mt-1"/>
+                    <ErrorMessage
+                      name="Specialty"
+                      component="div"
+                      className="text-red-500 text-xs mt-1"
+                    />
                   </div>
 
                   {/* Description */}
@@ -161,7 +166,11 @@ export default function EditTechnicianProfileModal({
                       placeholder={t("tech.describePlaceholder")}
                       className="p-3 border border-border rounded-lg bg-background text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary transition"
                     />
-                    <ErrorMessage name="Description" component="div" className="text-red-500 text-xs mt-1"/>
+                    <ErrorMessage
+                      name="Description"
+                      component="div"
+                      className="text-red-500 text-xs mt-1"
+                    />
                   </div>
 
                   {/* Documents */}
@@ -190,19 +199,17 @@ export default function EditTechnicianProfileModal({
                   </div>
 
                   {/* Buttons */}
-                  <div className="col-span-2 flex gap-4 mt-6">
+                  <div className="col-span-2 flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
                     <button
                       type="submit"
-                      className="flex-1 bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition"
-                    >
+                      className="flex-1 bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
                       {isPending ? t("profile.Saving...") : t("tech.save")}
                     </button>
 
                     <button
                       type="button"
                       onClick={onClose}
-                      className="flex-1 border border-border py-3 rounded-lg hover:bg-muted/20 transition"
-                    >
+                      className="flex-1 border border-border py-3 rounded-lg hover:bg-muted/20 transition">
                       {t("tech.cancel")}
                     </button>
                   </div>
@@ -219,13 +226,19 @@ export default function EditTechnicianProfileModal({
 function Input({ name, label, type = "text" }: any) {
   return (
     <div className="flex flex-col">
-      <label className="mb-1 text-sm font-medium text-foreground">{label}</label>
+      <label className="mb-1 text-sm font-medium text-foreground">
+        {label}
+      </label>
       <Field
         name={name}
         type={type}
-        className="p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition"
+        className="w-full p-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition"
       />
-      <ErrorMessage name={name} component="div" className="text-red-500 text-xs mt-1"/>
+      <ErrorMessage
+        name={name}
+        component="div"
+        className="text-red-500 text-xs mt-1"
+      />
     </div>
   );
 }

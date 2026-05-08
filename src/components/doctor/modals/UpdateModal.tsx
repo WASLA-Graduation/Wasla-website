@@ -58,6 +58,11 @@ export default function UpdateServiceModal({
     setPrice(initialData.price);
   }, [initialData, isOpen]);
 
+  // slot helps
+  const formatTimeBySeconds = (time: string) => {
+  return `${time}:00`;
+};
+
 const toMinutes = (t: string) => {
   const [h, m] = t.split(":").map(Number);
   return h * 60 + m;
@@ -155,8 +160,8 @@ const deleteSlot = (i:number)=>{
       price,
       serviceDays: serviceDays,
       timeSlots: timeSlots.map((s) => ({
-        start: s.start.length === 5 ? s.start + ":00" : s.start,
-        end: s.end.length === 5 ? s.end + ":00" : s.end,
+        start: s.start.length === 5 ? formatTimeBySeconds(s.start) : s.start,
+        end: s.end.length === 5 ? formatTimeBySeconds(s.end)  : s.end,
       })),
     };
 

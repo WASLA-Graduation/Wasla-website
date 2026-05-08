@@ -15,7 +15,7 @@ export default function NewChatPage() {
   const users = data?.data ?? [];
 
   const filtered = users.filter((u) =>
-    u.name?.toLowerCase().includes(search.toLowerCase()) && u.id != userId,
+    u.name?.toLowerCase().includes(search.toLowerCase()) && u.id != userId ,
   );
 
   return (

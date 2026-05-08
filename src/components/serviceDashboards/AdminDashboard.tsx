@@ -8,6 +8,7 @@ import {
   FaBars,
   FaTimes,
   FaSnowflake,
+  FaInbox,
 } from "react-icons/fa";
 import {
   FaCommentSms,
@@ -92,6 +93,11 @@ export default function AdminDashboard() {
           link: "/admin/admins-control",
           icon: <MdAdminPanelSettings />,
         },
+      ]
+    : []),
+  ...(role === "admin"
+    ? [
+      { label: t("common.chat"), link: "/chat", icon: <FaInbox /> },
       ]
     : []),
 ];

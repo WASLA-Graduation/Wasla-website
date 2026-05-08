@@ -220,7 +220,7 @@ export default function AppRoutes() {
         {/* end socila media */}
 
         {/* Chatting*/}
-        <Route element={<ProtectedRoute allowedRoles={["gym" , "doctor" , "resident" , "technician" ,  "restaurant"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["gym" , "doctor" , "resident" , "technician" ,  "restaurant" , "admin"]} />}>
           <Route path="/chat" element={<ChatLayout />}>
             <Route index element={<ChatList />} />
             <Route path="new" element={<NewChatPage />}/>

@@ -42,6 +42,9 @@ export default function AddServiceModal({
   if (!isOpen) return null;
 
   /*  TIME SLOT HELPERS  */
+  const formatTimeBySeconds = (time: string) => {
+  return `${time}:00`;
+};
   const toMinutes = (t: string) => {
     const [h, m] = t.split(":").map(Number);
     return h * 60 + m;
@@ -133,8 +136,8 @@ export default function AddServiceModal({
       price,
       serviceDays: serviceDays,
       timeSlots: timeSlots.map((s) => ({
-        start: s.start + ":00",
-        end: s.end + ":00",
+        start: formatTimeBySeconds(s.start),
+        end: formatTimeBySeconds(s.end),
       })),
     };
 

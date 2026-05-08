@@ -10,12 +10,16 @@ import ChatListSkeleton from "./ChatListSkeleton";
 import { useDeleteChat } from "../../hooks/chat/useChat";
 import { RecentChat } from "../../types/chat/chat-types";
 import { sameId, useChatHub } from "../../utils/singlr/useChatHub";
+import placeHolder from "../../assets/images/placeholder.png";
 
 export default function ChatList() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const currentUserId = sessionStorage.getItem("user_id") || "";
-  const myPhoto = sessionStorage.getItem("profilePhoto") || "";
+  const storedPhoto = sessionStorage.getItem("profilePhoto");
+  const role = sessionStorage.getItem("role");
+
+const myPhoto = role === "admin" ?  placeHolder : storedPhoto;
   const [search, setSearch] = useState("");
 
   useChatHub({
