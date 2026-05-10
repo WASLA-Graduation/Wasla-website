@@ -4,6 +4,7 @@ import { changeStatusReversation } from "../../api/restaurant/restaurant-api";
 type ChangeStatusPayload = {
   reversationId: number;
   status: number;
+  isResident : boolean
 };
 
 export default function useChangeReversationStatus() {
@@ -11,8 +12,8 @@ export default function useChangeReversationStatus() {
 
   return useMutation({
     mutationKey: ["change-reversation"],
-    mutationFn: ({ reversationId, status }: ChangeStatusPayload) =>
-      changeStatusReversation(reversationId, status),
+    mutationFn: ({ reversationId, status , isResident }: ChangeStatusPayload) =>
+      changeStatusReversation(reversationId, status , isResident),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reversation-book"] });

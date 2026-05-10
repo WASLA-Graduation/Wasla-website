@@ -59,6 +59,7 @@ export default function RestaurantReservationsDashboard() {
         actionType === "accept"
           ? RestaurantBookStatus.Accepted
           : RestaurantBookStatus.Cancelled,
+      isResident: false,    
     });
 
     setShowConfirm(false);

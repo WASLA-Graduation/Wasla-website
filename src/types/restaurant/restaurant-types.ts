@@ -39,6 +39,14 @@ export interface reversationData{
     reservationTime: string,
     status: number
 }
+
+export interface updateReservationData{
+    reservationId: number,
+    numberOfPersons: number,
+    reservationDate: string,
+    reservationTime: string,
+}
+
 export interface reversationDashboardData{
     id: number,
     userId: string,

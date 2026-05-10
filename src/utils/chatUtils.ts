@@ -1,16 +1,46 @@
 import { format, isToday, isYesterday, parseISO } from "date-fns";
+import i18next from "i18next";
 
-export function formatChatTime(dateStr: string): string {
-  try {
-    const date = parseISO(dateStr);
-    if (isToday(date)) return format(date, "HH:mm");
-    if (isYesterday(date)) return "Yesterday";
+export const formatChatTime = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
 
-    return format(date, "dd MMM");
-  } catch {
-    return "";
+  const isToday =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+
+  const isYesterday =
+    date.getDate() === yesterday.getDate() &&
+    date.getMonth() === yesterday.getMonth() &&
+    date.getFullYear() === yesterday.getFullYear();
+
+  const time = date.toLocaleTimeString(i18next.language, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  if (isToday) {
+    return time;
   }
-}
+
+  if (isYesterday) {
+    return `${
+      i18next.language === "ar" ? "أمس" : "Yesterday"
+    } ${time}`;
+  }
+
+  return date.toLocaleString(i18next.language, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
 export function formatLastSeen(
   dateStr?: string,

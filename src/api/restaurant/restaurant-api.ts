@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { addCategoryMenuData, addTableData, addToCartData, cartData, categoryMenuData, checkoutData, editCategoryMenuData, itemMenuData, menuData, residentTakeAway, restaurantChartsData, restaurantDetailsData, restaurantTakeAway, reversationDashboardData, reversationData, showAllRestaurants } from "../../types/restaurant/restaurant-types";
+import { addCategoryMenuData, addTableData, addToCartData, cartData, categoryMenuData, checkoutData, editCategoryMenuData, itemMenuData, menuData, residentTakeAway, restaurantChartsData, restaurantDetailsData, restaurantTakeAway, reversationDashboardData, reversationData, showAllRestaurants, updateReservationData } from "../../types/restaurant/restaurant-types";
 
 interface SpicialzedcatData {
   id:number,
@@ -129,14 +129,28 @@ export async function getReverstaionForResident(
   }
 }
 
-export async function changeStatusReversation(reversationId: number , status:number) {
+export async function changeStatusReversation(reversationId: number , status:number , isResident: boolean) {
    try {
-    const response = await axiosInstance.put(`Reservation/ChangeStatus?reservationId=${reversationId}&status=${status}`);
+    const response = await axiosInstance.put(`Reservation/ChangeStatus?isResident=${isResident}&reservationId=${reversationId}&status=${status}`);
     toast.success(response.data.message || "Book Changed successfully");
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage = axiosError.response?.data?.message || "changed failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function updateReservation(formData: updateReservationData) {
+  try {
+    const response = await axiosInstance.put("Reservation/reservation", formData);
+
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
     toast.error(errorMessage);
     throw error;
   }

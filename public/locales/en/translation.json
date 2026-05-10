@@ -985,6 +985,8 @@
     "futureDate": "Date must be in the future",
     "noBookings": "No reservations found",
     "pending": "Pending",
+    "editReservation": "Edit Reservation",
+    "Save": "Save",
     "accepted": "Accepted",
     "completed": "Completed",
     "cancelled": "Cancelled",

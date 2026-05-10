@@ -10,6 +10,8 @@ import ConfirmationModal from "../doctor/modals/ConfirmationModel";
 import noData from "../../assets/images/nodata.webp";
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
 import { RestaurantBookStatus } from "../../utils/enum";
+import useUpdateResevation from "../../hooks/restaurant/useUpdateReservation";
+import EditReservationModal from "./modal/UpdateRestaurantReservation";
 
 export default function RestaurantBookings() {
   const id = sessionStorage.getItem("user_id")!;
@@ -22,6 +24,12 @@ export default function RestaurantBookings() {
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] =
+    useState<reversationData | null>(null);
+
+  const { mutate: updateReservationMutate, isPending: isUpdating } =
+    useUpdateResevation();
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString(i18next.language, {
@@ -46,6 +54,10 @@ export default function RestaurantBookings() {
     setSelectedId(id);
     setShowConfirm(true);
   };
+  const handleEdit = (booking: reversationData) => {
+    setSelectedBooking(booking);
+    setShowEditModal(true);
+  };
 
   const confirmCancel = () => {
     if (!selectedId) return;
@@ -53,6 +65,7 @@ export default function RestaurantBookings() {
     changeStatus({
       reversationId: selectedId,
       status: RestaurantBookStatus.Cancelled,
+      isResident: true,
     });
 
     setShowConfirm(false);
@@ -138,7 +151,13 @@ export default function RestaurantBookings() {
 
               {/* Actions */}
               {b.status === RestaurantBookStatus.Pending && (
-                <div className="flex justify-center sm:justify-end mt-4">
+                <div className="flex flex-col sm:flex-row gap-2 justify-center sm:justify-end mt-4">
+                  <button
+                    onClick={() => handleEdit(b)}
+                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                    {t("restaurant.edit")}
+                  </button>
+
                   <button
                     onClick={() => handleCancel(b.id)}
                     disabled={isPending}
@@ -177,6 +196,24 @@ export default function RestaurantBookings() {
         onClose={() => setShowConfirm(false)}
         onConfirm={confirmCancel}
       />
+      {showEditModal && selectedBooking && (
+        <EditReservationModal
+          booking={selectedBooking}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedBooking(null);
+          }}
+          onSubmit={(data) => {
+            updateReservationMutate(data, {
+              onSuccess: () => {
+                setShowEditModal(false);
+                setSelectedBooking(null);
+              },
+            });
+          }}
+          isLoading={isUpdating}
+        />
+      )}
     </>
   );
 }
