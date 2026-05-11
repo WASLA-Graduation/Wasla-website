@@ -51,7 +51,7 @@ src/
 ### 🔐 Authentication System
 
 * Login / Register
-* Role-based access control
+* Role-based & Resource-based access control
 * Secure API integration
 
 ### 📊 Dashboards
