@@ -6,6 +6,7 @@ import useAddItemMenu from "../../../hooks/restaurant/useAddItemMenu";
 import useEditItemMenu from "../../../hooks/restaurant/useEditItemMenu";
 import { FiUploadCloud, FiX } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 const itemValidationSchema = (t: (key: string) => string) => Yup.object({
   nameEn: Yup.string()
@@ -74,7 +75,7 @@ export default function ItemModal({ open, onClose, restaurantId, categories, ini
     onSubmit: (values, { resetForm }) => {
       // Validate image for new items
       if (!initialData && !imageFile) {
-        alert(t("validation.imageRequired"));
+        toast.error(t("validation.imageRequired"));
         return;
       }
 
@@ -102,7 +103,7 @@ export default function ItemModal({ open, onClose, restaurantId, categories, ini
             },
             onError: (error: any) => {
               console.error("Edit error:", error);
-              alert(t("validation.editError"));
+              toast.error(t("validation.editError"));
             },
           }
         );
@@ -116,7 +117,7 @@ export default function ItemModal({ open, onClose, restaurantId, categories, ini
           },
           onError: (error: any) => {
             console.error("Add error:", error);
-            alert(t("validation.addError"));
+            toast.error(t("validation.addError"));
           },
         });
       }
@@ -343,7 +344,7 @@ export default function ItemModal({ open, onClose, restaurantId, categories, ini
                   const file = e.target.files?.[0];
                   if (file) {
                     if (file.size > 5 * 1024 * 1024) {
-                      alert(t("validation.imageTooLarge"));
+                      toast.error(t("validation.imageTooLarge"));
                       return;
                     }
                     setImageFile(file);

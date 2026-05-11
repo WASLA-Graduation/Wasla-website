@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import useAddCategoryMenu from "../../../hooks/restaurant/useAddCategoryMenu";
 import useEditCategoryMenu from "../../../hooks/restaurant/useEditCategoryMenu";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 // Validation Schema for Category
 const categoryValidationSchema = (t: (key: string) => string) => Yup.object({
@@ -66,7 +67,7 @@ export default function CategoryModal({
             },
             onError: (error: any) => {
               console.error("Edit error:", error);
-              alert(t("validation.editError"));
+              toast.error(t("validation.editError"));
             },
           }
         );
@@ -79,7 +80,7 @@ export default function CategoryModal({
           },
           onError: (error: any) => {
             console.error("Add error:", error);
-            alert(t("validation.addError"));
+            toast.error(t("validation.addError"));
           },
         });
       }
