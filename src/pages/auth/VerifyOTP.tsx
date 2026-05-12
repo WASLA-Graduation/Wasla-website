@@ -30,7 +30,7 @@ export default function VerifyOTP() {
   async function handleResend() {
     if (isCooldown) return;
 
-    const payload = { email };
+    const payload = { email , verificationType: 1};
     await resendcode(payload);
     setTimer(60);
     setIsCooldown(true);
@@ -58,18 +58,28 @@ export default function VerifyOTP() {
       .padStart(2, "0")}`;
   };
 
-  const handleSubmit = async (values: { verificationCode: string }) => {
-    try {
-      const payload = { email, verificationCode: values.verificationCode };
-      await verifyotp(payload, {
-        onSuccess: () => {
-          navigate("/auth/reset-password", { state: { email } });
-        },
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+ const handleSubmit = async (values: { verificationCode: string }) => {
+  try {
+    const payload = {
+      email,
+      verificationCode: values.verificationCode,
+      type: 1,
+    };
+
+    await verifyotp(payload, {
+      onSuccess: () => {
+        navigate("/auth/reset-password", {
+          state: {
+            email,
+            verificationCode: values.verificationCode,
+          },
+        });
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <motion.div

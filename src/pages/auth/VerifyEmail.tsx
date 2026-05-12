@@ -32,7 +32,7 @@ export default function VerifyEmail() {
 
   const handleSubmit = async (values: { verificationCode: string }) => {
     try {
-      const payload = { email, verificationCode: values.verificationCode };
+      const payload = { email, verificationCode: values.verificationCode , type:0};
       await verifyEmail(payload, {
         onSuccess: () => {
           toast.success("Verified Successfully");
@@ -48,7 +48,7 @@ export default function VerifyEmail() {
     if (isCooldown) return;
 
     try {
-      const payload = { email };
+      const payload = { email , verificationType : 0 };
       await resendcode(payload);
       toast.success("Code resent successfully");
       setIsCooldown(true);

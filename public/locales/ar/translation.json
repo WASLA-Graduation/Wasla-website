@@ -155,6 +155,7 @@
     "Enter OTP": "ادخل رمز التحقق",
     "Verifying...": "جارى التحقق...",
     "Resend Code": "اعادة ارسال الرمز",
+    "Resend" : "اعادة الارسال بعد",
     "Reset Password": "تغيير كلمة المرور",
     "resetFor": "تغيير كلمة المرور ل ",
     "Confirm password is required": "تأكيد كلمه المرور مطلوبة",

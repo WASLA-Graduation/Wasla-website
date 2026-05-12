@@ -19,7 +19,7 @@ export default function ForgetPassword() {
 
   const handleSubmit = async (values: { email: string }) => {
   try {
-    const payload = { email: values.email };
+    const payload = { email: values.email , verificationType : 1};
     await resend(payload, {
       onSuccess: () => {
         navigate("/auth/verify-otp", { state: { email: values.email } });
