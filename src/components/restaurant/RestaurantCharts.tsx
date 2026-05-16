@@ -94,6 +94,9 @@ export default function RestaurantCharts() {
 
   return (
     <div className="space-y-6">
+        <h1 className="text-2xl font-bold ml-4 mr-4">
+          {t("restaurant.Dashboard")}
+        </h1>
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {stats.map((s, i) => (

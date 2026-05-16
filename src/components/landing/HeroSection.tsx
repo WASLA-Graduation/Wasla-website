@@ -71,6 +71,7 @@ export default function HeroSection() {
 
                 <div className="flex justify-center gap-3 mt-6">
                   <button 
+                  onClick={()=> navigate("/dashboard")}
                   className="px-5 py-2.5 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-all font-medium text-base"
                   >
                     {t("hero.explore")}

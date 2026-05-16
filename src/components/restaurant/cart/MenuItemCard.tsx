@@ -35,7 +35,7 @@ const handleAddToCart = () => {
   return (
     <>
     {
-      item.isAvailable ?
+      item.isAvailable || !item.isDeleted?
    <div className="flex flex-col sm:flex-row gap-3 border border-border rounded-xl p-3 bg-background shadow-sm hover:shadow-md transition">
   
   {/* Image */}

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaMoneyBillWave } from "react-icons/fa";
 import { CiCreditCard1 } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   open: boolean;
@@ -21,7 +22,7 @@ export default function CheckoutModal({
 }: Props) {
   const { t } = useTranslation();
   const { mutate: checkout, isPending } = useCheckout();
-
+  const navigate = useNavigate();
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [payment, setPayment] = useState<number>(3);
@@ -57,7 +58,7 @@ export default function CheckoutModal({
             window.location.href = res.data.paymentKey;
           }
           else{
-            window.location.reload();
+            navigate("/resident/profile/my-bookings");
           }
         },
       }

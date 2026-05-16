@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { addCategoryMenuData, addTableData, addToCartData, cartData, categoryMenuData, checkoutData, editCategoryMenuData, itemMenuData, menuData, residentTakeAway, restaurantChartsData, restaurantDetailsData, restaurantTakeAway, reversationDashboardData, reversationData, showAllRestaurants, updateReservationData } from "../../types/restaurant/restaurant-types";
+import { addCategoryMenuData, addTableData, addToCartData, cartData, categoryMenuData, checkoutData, editCategoryMenuData, itemMenuData, menuData, residentTakeAway, restaurantAvalbility, restaurantChartsData, restaurantDetailsData, restaurantTakeAway, reversationDashboardData, reversationData, showAllRestaurants, updateReservationData } from "../../types/restaurant/restaurant-types";
 
 interface SpicialzedcatData {
   id:number,
@@ -488,3 +488,30 @@ export async function cancelOrder(orderId: number , isResident:boolean) {
     throw error;
   }
 }
+// restaurant status
+export async function changeAvalabilityOfRestaurant() {
+  try {
+    const response = await axiosInstance.put("Restaurant/ChangeStatus");
+
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function getAvalabilityOfRestaurant(userId : string) : Promise<restaurantAvalbility> {
+  try {
+    const response = await axiosInstance.get(`Restaurant/Status?userId=${userId}`);
+    return response.data.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+

@@ -995,6 +995,7 @@
     "prev": "Previous",
     "next": "Next",
     "page": "Page",
+    "Dashboard" : "Restaurant Dashboard",
     "edit": "Edit",
     "editProfile": "Edit Profile",
     "email": "Email",
@@ -1043,6 +1044,18 @@
       "change_image": "Change Image",
       "edit_category": "Edit Category",
       "edit_item": "Edit Item"
+    },
+    "status": {
+      "title": "Restaurant Status",
+      "availableDesc": "The restaurant is currently available and accepting orders",
+      "busyDesc": "The restaurant is currently busy and not accepting new orders",
+      "open": "Accepting Orders",
+      "closed": "Temporarily Closed",
+      "startOrders": "Start Orders",
+      "stopOrders": "Stop Orders",
+      "loading": "Checking...",
+       "deliveryUnavailable": "The restaurant is currently unavailable for delivery and is not accepting new orders right now",
+      "updating": "Updating..."
     },
     "reservations": "Reservations",
     "sure": "Are you sure?",

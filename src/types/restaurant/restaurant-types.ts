@@ -113,6 +113,7 @@ export interface restaurantChartsData {
 }
 
 export interface itemsData{
+    isDeleted: boolean,
     id: number,
     name: string,
     price: number,
@@ -183,4 +184,7 @@ export interface restaurantTakeAway{
     paymentMethod: number,
     createdAt: string,
     items: itemOrder[]
+}
+export interface restaurantAvalbility{
+    status: boolean
 }
