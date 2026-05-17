@@ -17,6 +17,29 @@ export default function useEditCart() {
     }) =>
       editItemCart(cartItemId, residentId, quantity),
 
+      onMutate: async ({ cartItemId, quantity }) => {
+  await queryClient.cancelQueries({
+    queryKey: ["cart"],
+  });
+
+  const previousCart = queryClient.getQueryData(["cart"]);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  queryClient.setQueryData(["cart"], (old: any[]) =>
+    old.map((item) =>
+      item.cartItemId === cartItemId
+        ? {
+            ...item,
+            quantity,
+            totalPrice: item.price * quantity,
+          }
+        : item
+    )
+  );
+
+  return { previousCart };
+},
+
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },

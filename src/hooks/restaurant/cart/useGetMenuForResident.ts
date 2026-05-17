@@ -3,7 +3,7 @@ import { getMenuDataForResident } from "../../../api/restaurant/restaurant-api";
 
 export default function useGetMenuForResident(id:string){
     return useQuery({
-        queryKey:["restaurant-menu"],
+        queryKey:["restaurant-menu" , id],
         queryFn: ()=> getMenuDataForResident(id),
     })
 }

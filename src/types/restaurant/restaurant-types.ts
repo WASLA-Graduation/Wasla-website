@@ -140,7 +140,9 @@ export interface cartData{
     menuItemCategoryName: string,
     imageUrl: string,
     quantity: number,
-    totalPrice: number
+    totalPrice: number,
+    isDeleted : boolean,
+    isAvailable : boolean
 }
 export interface checkoutData{
     restaurantId: string,
