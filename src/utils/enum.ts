@@ -51,6 +51,7 @@ export const enum NotificationType{
         doctorCompleteInfoScreen,
         doctorBookingScreen,
         doctorEditBookingScreen,
+        restaurantReservationCancelled,
         doctorCancelBookingScreen,
         messageReceived,
         driverCompleteInfoScreen,
@@ -70,6 +71,10 @@ export const enum NotificationType{
         restaurantReservationAccepted,
         restaurantNewReservation,
         orderStartedPreparing,
+        SocialHidden,
+        orderCancelled,
+        restaurantReservationUpdated,
+        rideRejected
 }
 export const  enum PaymentStatus{
         Pending,

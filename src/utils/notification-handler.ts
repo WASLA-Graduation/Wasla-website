@@ -133,7 +133,7 @@ export function getNotificationAction(
     case NotificationType.restaurantReservationAccepted:
       return {
         type: "navigate",
-        path: `/restaurant/orders`,
+        path: `/resident/profile/my-bookings`,
         label: "Complete Info",
       };
 
