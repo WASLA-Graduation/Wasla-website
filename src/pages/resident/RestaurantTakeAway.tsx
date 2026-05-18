@@ -5,10 +5,26 @@ import { useTranslation } from "react-i18next";
 import { menuData } from "../../types/restaurant/restaurant-types";
 import CartSection from "../../components/restaurant/cart/CartSection";
 import useGetRestaurantAvalability from "../../hooks/restaurant/useGetRestaurantAvalability";
+import useRestaurantHub from "../../utils/singlr/useRestaurantHub";
+import { useEffect } from "react";
 
 export default function RestaurantTakeAway() {
   const { restaurantId } = useParams();
   const { t } = useTranslation();
+  const token = sessionStorage.getItem("auth_token")!;
+   const { joinRestaurantGroup, leaveRestaurantGroup } = useRestaurantHub(token);
+
+  useEffect(() => {
+    if (restaurantId) {
+      joinRestaurantGroup(restaurantId);
+    }
+
+    return () => {
+      if (restaurantId) {
+        leaveRestaurantGroup(restaurantId);
+      }
+    };
+  }, [restaurantId]);
 
   const residentId = sessionStorage.getItem("user_id")!;
 
