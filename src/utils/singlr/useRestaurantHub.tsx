@@ -78,11 +78,11 @@ export function RestaurantHubProvider({
     );
     menuConnRef.current = conn;
 
-    conn.on("MenuItemAdded", (data) => {
+    conn.on("MenuItemAdded", () => {
       queryClient.invalidateQueries({ queryKey: ["item-menu"] });
       queryClient.invalidateQueries({ queryKey: ["restaurant-menu"] });
       toast.success(
-        `${i18next.t("restaurant.newItemAdded")}: ${data.name.ar || data.name.en}`
+        `${i18next.t("restaurant.newItemAdded")}`
       );
     });
 
