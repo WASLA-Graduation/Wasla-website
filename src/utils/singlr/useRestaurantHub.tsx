@@ -1,3 +1,4 @@
+// src/utils/singlr/RestaurantHubContext.tsx
 import {
   createContext,
   useContext,
@@ -12,18 +13,13 @@ import { toast } from "sonner";
 import i18next from "i18next";
 import * as signalR from "@microsoft/signalr";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 interface RestaurantHubContextValue {
   joinRestaurantGroup: (restaurantId: string) => Promise<void>;
   leaveRestaurantGroup: (restaurantId: string) => Promise<void>;
 }
 
-// ─── Context ──────────────────────────────────────────────────────────────────
-const RestaurantHubContext = createContext<RestaurantHubContextValue | null>(
-  null
-);
+const RestaurantHubContext = createContext<RestaurantHubContextValue | null>(null);
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
 export function RestaurantHubProvider({
   token,
   children,
@@ -33,36 +29,56 @@ export function RestaurantHubProvider({
 }) {
   const queryClient = useQueryClient();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const connectionRef = useRef<any>(null);
-  // Queue group joins that happen before the connection is ready
+  const restaurantConnRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const menuConnRef = useRef<any>(null);
   const pendingJoinsRef = useRef<string[]>([]);
 
+  // ─── restaurantHub — RestaurantStatusChanged only ───────────────────────────
   useEffect(() => {
     if (!token) return;
 
-    const connection = createHubConnection(
+    const conn = createHubConnection(
       "https://waslammka.runasp.net/restaurantHub",
       token
     );
-    connectionRef.current = connection;
+    restaurantConnRef.current = conn;
 
-    // ── Event Handlers ────────────────────────────────────────────────────────
-
-    connection.on("RestaurantStatusChanged", (data) => {
+    conn.on("RestaurantStatusChanged", (data) => {
       queryClient.invalidateQueries({ queryKey: ["restaurant-status"] });
       queryClient.invalidateQueries({
         queryKey: ["restaurant-menu", data.restaurantId.toString()],
         exact: false,
       });
-
-      const statusText = data.isAvailable
-        ? i18next.t("restaurant.nowAvailable")
-        : i18next.t("restaurant.nowUnavailable");
-
-      toast.info(statusText);
+      toast.info(
+        data.isAvailable
+          ? i18next.t("restaurant.nowAvailable")
+          : i18next.t("restaurant.nowUnavailable")
+      );
     });
 
-    connection.on("MenuItemAdded", (data) => {
+    conn
+      .start()
+      .then(() => console.log("✅ Connected to restaurantHub"))
+      .catch((err) => console.error("❌ restaurantHub failed:", err));
+
+    return () => {
+      conn.stop();
+      restaurantConnRef.current = null;
+    };
+  }, [token, queryClient]);
+
+  // ─── menuHub — MenuItem events ──────────────────────────────────────────────
+  useEffect(() => {
+    if (!token) return;
+
+    const conn = createHubConnection(
+      "https://waslammka.runasp.net/menuHub",
+      token
+    );
+    menuConnRef.current = conn;
+
+    conn.on("MenuItemAdded", (data) => {
       queryClient.invalidateQueries({ queryKey: ["item-menu"] });
       queryClient.invalidateQueries({ queryKey: ["restaurant-menu"] });
       toast.success(
@@ -70,105 +86,88 @@ export function RestaurantHubProvider({
       );
     });
 
-    connection.on("MenuItemUpdated", (data) => {
+    conn.on("MenuItemUpdated", (data) => {
       queryClient.invalidateQueries({ queryKey: ["item-menu"] });
       queryClient.invalidateQueries({ queryKey: ["restaurant-menu"] });
-
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueriesData(
-        { queryKey: ["cart"] },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (old: any[] | undefined) =>
-          old?.map((item) =>
-            item.menuItemId === data.id
-              ? {
-                  ...item,
-                  price: data.price,
-                  isAvailable: data.isAvailable,
-                  name: data.name,
-                  imageUrl: data.imageUrl,
-                }
-              : item
-          )
+      queryClient.setQueriesData({ queryKey: ["cart"] }, (old: any[] | undefined) =>
+        old?.map((item) =>
+          item.menuItemId === data.id
+            ? {
+                ...item,
+                price: data.price,
+                isAvailable: data.isAvailable,
+                name: data.name,
+                imageUrl: data.imageUrl,
+              }
+            : item
+        )
       );
-
       toast.info(i18next.t("restaurant.itemUpdated"));
     });
 
-    connection.on("MenuItemStatusChanged", (data) => {
+    conn.on("MenuItemStatusChanged", (data) => {
       queryClient.invalidateQueries({ queryKey: ["item-menu"] });
       queryClient.invalidateQueries({ queryKey: ["restaurant-menu"] });
-
-      queryClient.setQueriesData(
-        { queryKey: ["cart"] },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (old: any[] | undefined) =>
-          old?.map((item) =>
-            item.menuItemId === data.menuItemId
-              ? { ...item, isAvailable: data.isAvailable }
-              : item
-          )
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      queryClient.setQueriesData({ queryKey: ["cart"] }, (old: any[] | undefined) =>
+        old?.map((item) =>
+          item.menuItemId === data.menuItemId
+            ? { ...item, isAvailable: data.isAvailable }
+            : item
+        )
       );
-
-      const statusText = data.isAvailable
-        ? i18next.t("restaurant.itemNowAvailable")
-        : i18next.t("restaurant.itemNowUnavailable");
-
-      toast.info(statusText);
+      toast.info(
+        data.isAvailable
+          ? i18next.t("restaurant.itemNowAvailable")
+          : i18next.t("restaurant.itemNowUnavailable")
+      );
     });
 
-    connection.on("MenuItemDeleted", (data) => {
+    conn.on("MenuItemDeleted", (data) => {
       queryClient.invalidateQueries({ queryKey: ["item-menu"] });
       queryClient.invalidateQueries({ queryKey: ["restaurant-menu"] });
-
-      queryClient.setQueriesData(
-        { queryKey: ["cart"] },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (old: any[] | undefined) =>
-          old?.map((item) =>
-            item.menuItemId === data.menuItemId
-              ? { ...item, isDeleted: true, isAvailable: false }
-              : item
-          )
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      queryClient.setQueriesData({ queryKey: ["cart"] }, (old: any[] | undefined) =>
+        old?.map((item) =>
+          item.menuItemId === data.menuItemId
+            ? { ...item, isDeleted: true, isAvailable: false }
+            : item
+        )
       );
-
       toast.warning(i18next.t("restaurant.itemDeleted"), {
         description: i18next.t("restaurant.itemRemovedFromCart"),
       });
     });
 
-    // ── Start Connection then flush pending joins ──────────────────────────────
-    connection
+    conn
       .start()
       .then(async () => {
-        console.log("✅ Connected to restaurantHub");
-
-        // Flush any joinRestaurantGroup calls that came in before connection was ready
+        console.log("✅ Connected to menuHub");
+        // flush any pending joins that arrived before connection was ready
         for (const id of pendingJoinsRef.current) {
           try {
-            await connection.invoke("JoinRestaurantGroup", id);
-            console.log(`✅ Joined restaurant group: ${id}`);
+            await conn.invoke("JoinRestaurantGroup", id);
+            console.log(`✅ menuHub joined group: ${id}`);
           } catch (err) {
-            console.error(`❌ Failed to join group ${id}:`, err);
+            console.error(`❌ menuHub join failed for ${id}:`, err);
           }
         }
         pendingJoinsRef.current = [];
       })
-      .catch((err) => console.error("❌ restaurantHub connection failed:", err));
+      .catch((err) => console.error("❌ menuHub failed:", err));
 
     return () => {
-      connection.stop();
-      connectionRef.current = null;
+      conn.stop();
+      menuConnRef.current = null;
     };
   }, [token, queryClient]);
 
-  // ─── Group Methods ───────────────────────────────────────────────────────────
-
+  // ─── Group Methods — على menuHub فقط ────────────────────────────────────────
   const joinRestaurantGroup = useCallback(async (restaurantId: string) => {
-    const conn = connectionRef.current;
+    const conn = menuConnRef.current;
 
     if (!conn) {
-      // Connection not created yet — queue it
       pendingJoinsRef.current.push(restaurantId);
       return;
     }
@@ -176,50 +175,43 @@ export function RestaurantHubProvider({
     if (conn.state === signalR.HubConnectionState.Connected) {
       try {
         await conn.invoke("JoinRestaurantGroup", restaurantId);
-        console.log(`✅ Joined restaurant group: ${restaurantId}`);
+        console.log(`✅ menuHub joined group: ${restaurantId}`);
       } catch (err) {
-        console.error(`❌ Failed to join group ${restaurantId}:`, err);
+        console.error(`❌ menuHub join failed:`, err);
       }
     } else {
-      // Connection exists but not yet Connected — queue it
       pendingJoinsRef.current.push(restaurantId);
     }
   }, []);
 
   const leaveRestaurantGroup = useCallback(async (restaurantId: string) => {
-    const conn = connectionRef.current;
+    const conn = menuConnRef.current;
 
     if (conn?.state === signalR.HubConnectionState.Connected) {
       try {
         await conn.invoke("LeaveRestaurantGroup", restaurantId);
-        console.log(`✅ Left restaurant group: ${restaurantId}`);
+        console.log(`✅ menuHub left group: ${restaurantId}`);
       } catch (err) {
-        console.error(`❌ Failed to leave group ${restaurantId}:`, err);
+        console.error(`❌ menuHub leave failed:`, err);
       }
     }
 
-    // Remove from pending queue if it was never joined
     pendingJoinsRef.current = pendingJoinsRef.current.filter(
       (id) => id !== restaurantId
     );
   }, []);
 
   return (
-    <RestaurantHubContext.Provider
-      value={{ joinRestaurantGroup, leaveRestaurantGroup }}
-    >
+    <RestaurantHubContext.Provider value={{ joinRestaurantGroup, leaveRestaurantGroup }}>
       {children}
     </RestaurantHubContext.Provider>
   );
 }
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
 export function useRestaurantHubContext() {
   const ctx = useContext(RestaurantHubContext);
   if (!ctx) {
-    throw new Error(
-      "useRestaurantHubContext must be used inside RestaurantHubProvider"
-    );
+    throw new Error("useRestaurantHubContext must be used inside RestaurantHubProvider");
   }
   return ctx;
 }
