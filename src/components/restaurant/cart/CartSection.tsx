@@ -2,8 +2,8 @@ import useGetCart from "../../../hooks/restaurant/cart/useGetCart";
 import useRemoveFromCart from "../../../hooks/restaurant/cart/useRemoveFromCart";
 import useEditCart from "../../../hooks/restaurant/cart/useEditItemCart";
 import { useTranslation } from "react-i18next";
-import { MdDeleteOutline } from "react-icons/md";
-import { useState } from "react";
+import { MdDeleteOutline, MdWarningAmber } from "react-icons/md";
+import { useState, useMemo } from "react";
 import CheckoutModal from "./modal/CheckoutModal";
 
 export default function CartSection({
@@ -17,15 +17,26 @@ export default function CartSection({
   const { mutate: removeItem, isPending: isRemoving } = useRemoveFromCart();
   const { mutate: editItem, isPending: isEditing } = useEditCart();
   const { t } = useTranslation();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [invalidItems, setInvalidItems] = useState<any[]>([]);
   const [showUnavailableModal, setShowUnavailableModal] = useState(false);
-
   const [open, setOpen] = useState(false);
+
+  const { validItems, hasIssues } = useMemo(() => {
+    if (!data) return { validItems: [], hasIssues: false };
+
+    const valid = data.filter((item) => item.isAvailable && !item.isDeleted);
+    const hasProblems = data.some(
+      (item) => !item.isAvailable || item.isDeleted,
+    );
+
+    return { validItems: valid, hasIssues: hasProblems };
+  }, [data]);
 
   if (!data || data.length === 0) return null;
 
-  const total = data.reduce((sum, item) => sum + item.totalPrice, 0);
+  const total = validItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
   const handleCheckout = () => {
     const unavailable = data.filter(
@@ -41,6 +52,22 @@ export default function CartSection({
     setOpen(true);
   };
 
+  const handleCleanCart = () => {
+    const unavailable = data.filter(
+      (item) => item.isDeleted || !item.isAvailable,
+    );
+
+    unavailable.forEach((item) => {
+      removeItem({
+        cartItemId: item.cartItemId,
+        residentId,
+      });
+    });
+
+    setShowUnavailableModal(false);
+    setInvalidItems([]);
+  };
+
   return (
     <>
       <div
@@ -54,6 +81,15 @@ rounded-xl sm:rounded-2xl
 p-3 sm:p-4 
 shadow-2xl z-50
 ">
+        {hasIssues && (
+          <div className="mb-3 px-3 py-2 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-center gap-2">
+            <MdWarningAmber className="text-yellow-600 shrink-0" />
+            <p className="text-xs text-yellow-700 dark:text-yellow-400">
+              {t("restaurant.someItemsUnavailable")}
+            </p>
+          </div>
+        )}
+
         <div className="max-h-56 overflow-y-auto space-y-3 pr-1">
           {data.map((item) => (
             <div
@@ -138,16 +174,19 @@ shadow-2xl z-50
           </button>
         </div>
       </div>
+
       <CheckoutModal
         open={open}
         onClose={() => setOpen(false)}
         residentId={residentId}
         restaurantId={restaurantId}
       />
+
+      {/* ⚠️ مودال العناصر غير المتاحة */}
       {showUnavailableModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-        style={{marginTop :"0"}}
-        >
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          style={{ marginTop: "0" }}>
           <div className="w-full max-w-md rounded-3xl border border-border bg-background p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
             {/* icon */}
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 text-red-500">
@@ -197,11 +236,19 @@ shadow-2xl z-50
             </div>
 
             {/* actions */}
-            <button
-              onClick={() => setShowUnavailableModal(false)}
-              className="mt-6 w-full rounded-xl bg-primary py-3 text-sm font-medium text-white transition hover:opacity-90">
-              {t("common.ok")}
-            </button>
+            <div className="mt-6 space-y-2">
+              <button
+                onClick={handleCleanCart}
+                className="w-full rounded-xl bg-red-500 py-3 text-sm font-medium text-white transition hover:bg-red-600">
+                {t("restaurant.removeAllUnavailable")}
+              </button>
+
+              <button
+                onClick={() => setShowUnavailableModal(false)}
+                className="w-full rounded-xl border border-border py-3 text-sm font-medium transition hover:bg-muted">
+                {t("common.ok")}
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -5,6 +5,8 @@ import useBookingHub from "./utils/singlr/useBookingHub";
 import useServiceHub from "./utils/singlr/useServiceHub";
 import useReviewHub from "./utils/singlr/useReviewHub";
 import { ChatHubProvider } from "./utils/singlr/ChatHubConnection";
+import useReservationHub from "./utils/singlr/useReservationHub";
+import useRestaurantHub from "./utils/singlr/useRestaurantHub";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +31,8 @@ function SignalRListener({ token }: { token: string }) {
   useBookingHub(token);
   useServiceHub(token);
   useReviewHub(token);
+  useReservationHub(token);
+  useRestaurantHub(token)
 
   return null;
 }

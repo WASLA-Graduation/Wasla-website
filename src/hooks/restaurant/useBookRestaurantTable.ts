@@ -21,8 +21,14 @@ export default function useBookRestaurantTable() {
         eventType: UserEvent.booking,
       });
 
-      queryClient.invalidateQueries({ queryKey: ["table-booking"], exact: false });
-      queryClient.invalidateQueries({ queryKey: ["reversation-book"], exact: false });
+      queryClient.invalidateQueries({ 
+        queryKey: ["table-booking"], 
+        exact: false 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ["reversation-book"], 
+        exact: false 
+      });
     },
   });
 }
