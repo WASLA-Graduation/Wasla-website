@@ -9,13 +9,14 @@ export default function useReservationHub(token: string) {
   useEffect(() => {
     if (!token) return;
 
-    const connection = createHubConnection(
-      "/reservationHub", 
-      token
-    );
+    const timer = setTimeout(() => {
+   const connection = createHubConnection(
+  "https://waslammka.runasp.net/reservationHub", 
+  token
+);
 
     connection.start().then(() => {
-      console.log("Connected to reservationHub");
+      console.log("Connected to reservationHub.");
     });
 
     connection.on("ReservationCreated", (data) => {
@@ -56,6 +57,11 @@ export default function useReservationHub(token: string) {
 
     return () => {
       connection.stop();
+    };
+     }, 2000); 
+
+    return () => {
+      clearTimeout(timer);
     };
   }, [token, queryClient]);
 }

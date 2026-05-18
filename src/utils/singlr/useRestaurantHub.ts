@@ -13,7 +13,11 @@ export default function useRestaurantHub(token: string) {
   useEffect(() => {
     if (!token) return;
 
-    const connection = createHubConnection("/restaurantHub", token);
+    const timer = setTimeout(() => {
+    const connection = createHubConnection(
+  "https://waslammka.runasp.net/restaurantHub",
+  token
+);
     connectionRef.current = connection;
 
     connection.start().then(() => {
@@ -109,6 +113,12 @@ export default function useRestaurantHub(token: string) {
 
     return () => {
       connection.stop();
+    };
+      }, 3000); 
+
+    return () => {
+      clearTimeout(timer);
+      connectionRef.current?.stop();
     };
   }, [token, queryClient]);
 
